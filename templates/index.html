@@ -4,209 +4,117 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>EmotionAI</title>
+    <title>Emotions</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
     <style>
         body {
             font-family: 'Roboto', sans-serif;
-            background-color: #0d1117;
-            color: #e6edf3;
-            animation: fadeIn 1s ease-in-out;
+            background-color: #f3f4f6;
+            color: #374151;
             overflow-x: hidden;
             position: relative;
         }
 
-        @keyframes fadeIn {
-            from {
-                opacity: 0;
-            }
-            to {
-                opacity: 1;
-            }
-        }
-
-        @keyframes float {
-            from {
-                transform: translateY(0);
-            }
-            to {
-                transform: translateY(-20px);
-            }
-        }
-
         .btn-custom {
-            background-color: #1f6feb;
+            background-color: #007ac2;
             color: white;
             padding: 12px 24px;
             border-radius: 8px;
-            border: none;
             font-size: 16px;
             font-weight: bold;
             transition: background-color 0.3s, transform 0.2s;
         }
 
         .btn-custom:hover {
-            background-color: #1158c7;
+            background-color: #005a8f;
             transform: scale(1.05);
+        }
+
+        .card {
+            background-color: white;
+            border: 1px solid #d1d5db;
+            border-radius: 10px;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+            padding: 20px;
+        }
+
+        .card-header {
+            background-color: #007ac2;
+            color: white;
+            padding: 10px;
+            border-radius: 10px 10px 0 0;
         }
 
         .progress-container {
             width: 100%;
-            background-color: #2c313a;
+            background-color: #e5e7eb;
             border-radius: 5px;
             overflow: hidden;
         }
 
         .progress {
             height: 8px;
-            background-color: #1f6feb;
+            background-color: #007ac2;
             width: 0%;
             transition: width 0.4s ease;
-        }
-
-        .loading-spinner {
-            border: 4px solid transparent;
-            border-top: 4px solid #1f6feb;
-            border-radius: 50%;
-            animation: spin 1s linear infinite;
-        }
-
-        @keyframes spin {
-            from {
-                transform: rotate(0deg);
-            }
-            to {
-                transform: rotate(360deg);
-            }
-        }
-
-        .card {
-            background-color: #161b22;
-            border: 1px solid #30363d;
-            border-radius: 10px;
-            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
-            padding: 20px;
-        }
-
-        .title-divider {
-            height: 2px;
-            background: linear-gradient(to right, #1f6feb, transparent);
-            margin: 10px 0;
-        }
-
-        .bubble {
-            position: absolute;
-            background-color: rgba(31, 111, 235, 0.3);
-            border-radius: 50%;
-            animation: float 4s ease-in-out infinite alternate;
-        }
-
-        .bubble:nth-child(1) {
-            width: 80px;
-            height: 80px;
-            bottom: 10%;
-            left: 15%;
-            animation-duration: 5s;
-        }
-
-        .bubble:nth-child(2) {
-            width: 50px;
-            height: 50px;
-            bottom: 20%;
-            left: 30%;
-            animation-duration: 6s;
-        }
-
-        .bubble:nth-child(3) {
-            width: 100px;
-            height: 100px;
-            bottom: 25%;
-            left: 60%;
-            animation-duration: 7s;
-        }
-
-        .bubble:nth-child(4) {
-            width: 40px;
-            height: 40px;
-            bottom: 35%;
-            left: 75%;
-            animation-duration: 8s;
         }
     </style>
 </head>
 
-<body class="bg-custom min-h-screen">
-    <!-- Efecto de burbujas -->
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-    <div class="bubble"></div>
-
+<body class="bg-gray-100 min-h-screen">
     <div class="container mx-auto px-4 py-8">
         <!-- Título principal -->
-        <div class="text-center animate-fade">
-            <h1 class="text-5xl font-extrabold tracking-tight">EmotionAI</h1>
-            <p class="text-lg font-light mt-2">¡Analiza emociones en tus imágenes de forma rápida y precisa!</p>
-            <div class="title-divider"></div>
+        <div class="text-center mb-12">
+            <h1 class="text-4xl font-bold text-gray-800">Analizador de emociones</h1>
+            <p class="text-lg text-gray-600">Sube tus imágenes y analiza sus emociones</p>
         </div>
 
-        <!-- Contenedor principal -->
-        <div class="max-w-4xl mx-auto mt-12">
-            <div class="flex flex-wrap -mx-4">
-                <!-- Panel izquierdo -->
-                <div class="w-full md:w-1/2 px-4 mb-8">
-                    <div class="card">
-                        <h2 class="text-2xl font-semibold mb-6">Sube tu imagen para analizar emociones</h2>
-                        <form id="uploadForm" class="space-y-6">
-                            <div class="flex items-center justify-center w-full">
-                                <label class="flex flex-col items-center justify-center w-full h-48 border-4 border-dashed border-gray-600 cursor-pointer">
-                                    <div class="text-center text-gray-400" id="previewContainer">
-                                        <p>Arrastra o selecciona una imagen</p>
-                                    </div>
-                                    <input type="file" class="opacity-0 absolute" name="file" accept=".jpg,.jpeg,.png" id="fileInput" />
-                                </label>
-                            </div>
-                            <button type="submit" class="btn-custom w-full">
-                                Analizar Emoción
-                            </button>
-                        </form>
-                        <div id="uploadMessage" class="text-green-500 mt-4 hidden">
-                            Imagen subida correctamente.
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-8">
+            <!-- Panel izquierdo -->
+            <div class="card">
+                <div class="card-header text-center text-lg font-semibold">Cargar Foto</div>
+                <div class="p-4">
+                    <p class="text-sm text-gray-600 mb-4">Selecciona o arrastra una imagen aquí.</p>
+                    <form id="uploadForm" class="space-y-6">
+                        <div class="flex items-center justify-center w-full h-48 border-4 border-dashed border-gray-300 rounded-lg cursor-pointer">
+                            <label class="flex flex-col items-center justify-center w-full h-full">
+                                <div id="previewContainer" class="text-gray-400 text-center">
+                                    <p>Arrastra o selecciona una imagen</p>
+                                </div>
+                                <input type="file" class="hidden" name="file" accept=".jpg,.jpeg,.png" id="fileInput" />
+                            </label>
                         </div>
-                        <div id="progressSection" class="hidden mt-6">
-                            <h2 class="text-xl font-semibold mb-4">Progreso del Análisis</h2>
-                            <div class="progress-container">
-                                <div id="progress" class="progress"></div>
-                            </div>
-                        </div>
-                        <div id="loading" class="hidden mt-6">
-                            <div class="flex items-center justify-center">
-                                <div class="loading-spinner h-14 w-14"></div>
-                            </div>
-                        </div>
-                        <div id="error" class="hidden mt-6 p-4 bg-red-800 border border-red-600 text-red-200 rounded-lg">
+                        <button type="submit" class="btn-custom w-full">Procesar</button>
+                    </form>
+                    <div id="uploadMessage" class="text-green-600 mt-4 hidden">Imagen cargada exitosamente.</div>
+                    <div id="progressSection" class="hidden mt-6">
+                        <h2 class="text-sm text-gray-600 mb-4">Progreso del Análisis</h2>
+                        <div class="progress-container">
+                            <div id="progress" class="progress"></div>
                         </div>
                     </div>
+                    <div id="loading" class="hidden mt-6 text-center">
+                        <div class="loader inline-block w-8 h-8 border-4 border-t-blue-500 border-gray-300 rounded-full animate-spin"></div>
+                    </div>
+                    <div id="error" class="hidden mt-6 p-4 bg-red-100 border border-red-500 text-red-700 rounded-lg"></div>
                 </div>
+            </div>
 
-                <!-- Panel derecho -->
-                <div class="w-full md:w-1/2 px-4">
-                    <div class="card">
-                        <h2 class="text-2xl font-semibold mb-6">Resultados de la Detección</h2>
-                        <div id="detectionComplete" class="hidden text-green-500 font-bold">
-                            Detección Completa
-                        </div>
-                        <div id="results" class="hidden">
-                            <div class="border border-gray-600 rounded-lg p-6">
-                                <h4 class="font-semibold mb-4">Resultados:</h4>
-                                <div class="relative">
-                                    <img id="keypointImage" class="max-w-full h-auto mx-auto" src="" alt="Puntos clave del rostro">
-                                    <img id="resultImageSecondary" class="max-w-full h-auto mx-auto mt-4" src="" alt="Transformaciones de la Imagen">
-                                </div>
+            <!-- Panel derecho -->
+            <div class="card">
+                <div class="card-header text-center text-lg font-semibold">Resultados</div>
+                <div class="p-4">
+                    <div id="detectionComplete" class="hidden text-green-600 font-bold text-center">Detección Finalizada</div>
+                    <div id="results" class="hidden">
+                        <div class="border border-gray-300 rounded-lg p-4">
+                            <h4 class="font-semibold mb-4">Resultados:</h4>
+                            <div class="relative">
+                                <img id="keypointImage" class="max-w-full h-auto mx-auto mb-4" src="" alt="Puntos clave del rostro">
+                                <img id="resultImageSecondary" class="max-w-full h-auto mx-auto" src="" alt="Transformaciones de la Imagen">
                             </div>
-                            <div id="emotionLabel" class="text-lg font-bold text-center mt-4 hidden"></div>
                         </div>
+                        <div id="emotionLabel" class="text-lg font-bold text-center mt-4 hidden"></div>
                     </div>
                 </div>
             </div>
